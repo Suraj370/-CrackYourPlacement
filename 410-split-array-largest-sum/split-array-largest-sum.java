@@ -1,37 +1,35 @@
 class Solution {
-    public int splitArray(int[] nums, int maxSplits) {
-        int maxElement = 0, sumRange = 0;
-
-        for (int num : nums) {
-            maxElement = Math.max(maxElement, num);
-            sumRange += num;
-        }
-
-        while (maxElement < sumRange) {
-            int mid = (maxElement + sumRange) >> 1; 
-          
-            if (isSplitPossible(nums, mid, maxSplits)) {
-                sumRange = mid; 
+        public static int countPartitions(int[] a, int maxSum) {
+        int n = a.length; 
+        int partitions = 1;
+        long subarraySum = 0;
+        for (int i = 0; i < n; i++) {
+            if (subarraySum + a[i] <= maxSum) {
+                subarraySum += a[i];
             } else {
-                maxElement = mid + 1; 
+                partitions++;
+                subarraySum = a[i];
             }
         }
-
-        return maxElement;
+        return partitions;
     }
-
-    private boolean isSplitPossible(int[] nums, int maxSubarraySum, int maxSplits) {
-        int subarraySum = (1 << 30), subarrayCount = 0; 
-      
-        for (int num : nums) {
-            subarraySum += num;
-
-            if (subarraySum > maxSubarraySum) {
-                subarrayCount++;
-                subarraySum = num;
-            }
+    public int splitArray(int[] nums, int k) {
+        int low = nums[0];
+        int high = 0;
+        for (int i = 0; i < nums.length; i++) {
+            low = Math.max(low, nums[i]);
+            high += nums[i];
         }
 
-        return subarrayCount <= maxSplits;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            int partitions = countPartitions(nums, mid);
+            if (partitions > k) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return low;
     }
 }
