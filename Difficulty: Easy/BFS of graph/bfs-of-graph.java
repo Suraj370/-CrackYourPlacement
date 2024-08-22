@@ -33,24 +33,23 @@ class GFG {
 // } Driver Code Ends
 
 
-
 class Solution {
     // Function to return Breadth First Traversal of given graph.
-    public ArrayList<Integer> bfsOfGraph(int V, ArrayList<ArrayList<Integer>> adj) {
+       public ArrayList<Integer> bfsOfGraph(int V, ArrayList<ArrayList<Integer>> adj) {
         ArrayList<Integer> bfs = new ArrayList<>();
         boolean[] visited = new boolean[V];
         Queue<Integer> queue = new LinkedList<>();
         
-        // Start BFS from node 0
-        visited[0] = true;
+        // Start BFS from vertex 0
         queue.offer(0);
+        visited[0] = true;
         
         while (!queue.isEmpty()) {
-            int currentNode = queue.poll();
-            bfs.add(currentNode);
+            int currentVertex = queue.poll();
+            bfs.add(currentVertex);
             
-            // Explore all adjacent nodes of the current node
-            for (int neighbor : adj.get(currentNode)) {
+            // Explore all adjacent vertices
+            for (int neighbor : adj.get(currentVertex)) {
                 if (!visited[neighbor]) {
                     visited[neighbor] = true;
                     queue.offer(neighbor);
@@ -59,5 +58,5 @@ class Solution {
         }
         
         return bfs;
-    }
+       }
 }
