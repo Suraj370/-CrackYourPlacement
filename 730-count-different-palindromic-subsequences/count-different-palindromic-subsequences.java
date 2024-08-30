@@ -1,48 +1,48 @@
 class Solution {
-    // Define the modulus constant for the problem
-    private static final int MOD = 1_000_000_007;
-
     public int countPalindromicSubsequences(String s) {
-        int n = s.length(); 
-      
-        long[][][] dp = new long[n][n][4];
-      
-        for (int i = 0; i < n; ++i) {
-            dp[i][i][s.charAt(i) - 'a'] = 1;
+        int len = s.length();
+        int[][] dp = new int[len][len];
+
+        char[] chs = s.toCharArray();
+        for(int i = 0; i < len; i++){
+            dp[i][i] = 1;  
         }
+
+        for(int distance = 1; distance < len; distance++){
+            for(int i = 0; i < len - distance; i++){
+                int j = i + distance;
+                if(chs[i] == chs[j]){
+                    int low = i + 1;
+                    int high = j - 1;
+
+
+                    while(low <= high && chs[low] != chs[j]){
+                        low++;
+                    }
+                    while(low <= high && chs[high] != chs[j]){
+                        high--;
+                    }
+                    if(low > high){
       
-        for (int len = 2; len <= n; ++len) {
-
-            for (int start = 0; start + len <= n; ++start) {
-                int end = start + len - 1; 
-
-                for (char c = 'a'; c <= 'd'; ++c) {
-                    int charIndex = c - 'a';
-
-                    if (s.charAt(start) == c && s.charAt(end) == c) {
-                        dp[start][end][charIndex] = 2 + dp[start + 1][end - 1][0]
-                            + dp[start + 1][end - 1][1] + dp[start + 1][end - 1][2]
-                            + dp[start + 1][end - 1][3];
-                        dp[start][end][charIndex] %= MOD; 
+                        dp[i][j] = dp[i + 1][j - 1] * 2 + 2;  
+                    } 
+                    else if(low == high){
+  
+                        
+                        dp[i][j] = dp[i + 1][j - 1] * 2 + 1;  
                     }
-                    else if (s.charAt(start) == c) {
-                        dp[start][end][charIndex] = dp[start][end - 1][charIndex];
-                    }
-                    else if (s.charAt(end) == c) {
-                        dp[start][end][charIndex] = dp[start + 1][end][charIndex];
-                    }
-                    else {
-                        dp[start][end][charIndex] = dp[start + 1][end - 1][charIndex];
+                    else{
+
+                        dp[i][j] = dp[i + 1][j - 1] * 2 - dp[low + 1][high - 1]; 
                     }
                 }
+                else{
+                    dp[i][j] = dp[i][j - 1] + dp[i + 1][j] - dp[i + 1][j - 1];  
+                }
+                dp[i][j] = dp[i][j] < 0 ? dp[i][j] + 1000000007 : dp[i][j] % 1000000007;
             }
         }
-      
-        long result = 0;
-        for (int k = 0; k < 4; ++k) {
-            result += dp[0][n - 1][k];
-        }
-      
-        return (int) (result % MOD); 
+
+        return dp[0][len - 1];
     }
 }
